@@ -103,4 +103,28 @@ class Webservice {
             return .failure(.custom(message: "No data"))
         }
     }
+    
+    func deleteAccount(token: String) async -> Result<String, AuthenticationError> {
+        guard let url = URL(string: Webservice.url + "users/delete") else {
+            return .failure(.invalidCredentials)
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+
+            if let code = try? JSONDecoder().decode(String.self, from: data) {
+                return .success(code)
+            } else {
+                return .failure(.invalidCredentials)
+            }
+        } catch {
+            return .failure(.custom(message: "No data"))
+        }
+    }
 }

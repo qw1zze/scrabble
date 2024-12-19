@@ -14,11 +14,16 @@ struct HomeView: View {
     var homeVC: HomeViewModel
     
     var body: some View {
-        Button {
-            defaults.removeObject(forKey: "JWTToken")
-            homeVC.isAuth = false
-        } label: {
-            Text("logout")
+        TabView {
+            VStack {}
+                .tabItem {
+                    Label("Rooms", systemImage: "list.bullet")
+                }
+            
+            SettingsView(settingsVC: .init(isAuth: homeVC.$isAuth))
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
+                }
         }
 
     }
