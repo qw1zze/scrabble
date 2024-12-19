@@ -8,14 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    let defaults = UserDefaults.standard
+    
+    @State
+    var isAuth = false
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if isAuth {
+            HomeView(homeVC: .init(isAuth: $isAuth))
+        } else {
+            RegistrationView(viewModel: .init(isAuth: $isAuth))
         }
-        .padding()
+        
+        EmptyView()
+            .onAppear {
+                isAuth = defaults.string(forKey: "JWTToken") != nil
+            }
     }
 }
 
