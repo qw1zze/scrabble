@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct RegistrationView: View {
-    @ObservedObject var viewModel: AuthViewModel
+struct LoginView: View {
+    @StateObject var viewModel: AuthViewModel
     
     var body: some View {
         main
@@ -26,7 +26,9 @@ struct RegistrationView: View {
             
             fields
                 
-            registerButton
+            loginButton
+            
+            goToRegsiter
         }
     }
     
@@ -38,7 +40,6 @@ struct RegistrationView: View {
     
     var fields: some View {
         Group {
-            TextField("username", text: $viewModel.username)
             TextField("email", text: $viewModel.email)
             SecureField("password", text: $viewModel.password)
             
@@ -53,9 +54,9 @@ struct RegistrationView: View {
         .font(.title3)
     }
     
-    var registerButton: some View {
-        Button("Register") {
-            viewModel.register()
+    var loginButton: some View {
+        Button("Login") {
+            viewModel.login()
         }
         .frame(maxWidth: .infinity)
         .tint(.white)
@@ -66,8 +67,17 @@ struct RegistrationView: View {
         }
         .padding(.horizontal)
     }
+    
+    var goToRegsiter: some View {
+        NavigationLink {
+            RegistrationView(viewModel: viewModel)
+        } label: {
+            Text("Register")
+        }
+        .padding(.top, 30)
+    }
 }
 
 #Preview {
-    RegistrationView(viewModel: .init(isAuth: .constant(false)))
+    LoginView(viewModel: .init(isAuth: .constant(false)))
 }

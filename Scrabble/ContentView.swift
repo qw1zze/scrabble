@@ -17,13 +17,13 @@ struct ContentView: View {
         if isAuth {
             HomeView(homeVC: .init(isAuth: $isAuth))
         } else {
-            RegistrationView(viewModel: .init(isAuth: $isAuth))
-        }
-        
-        EmptyView()
-            .onAppear {
-                isAuth = defaults.string(forKey: "JWTToken") != nil
+            NavigationView {
+                LoginView(viewModel: .init(isAuth: $isAuth))
+                    .onAppear {
+                        isAuth = defaults.string(forKey: "JWTToken") != nil
+                    }
             }
+        }
     }
 }
 

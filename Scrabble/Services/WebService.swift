@@ -74,4 +74,33 @@ class Webservice {
             return .failure(.custom(message: "No data"))
         }
     }
+    
+    func login(body: LoginRequest) async -> Result<LoginResponse, AuthenticationError> {
+        guard let url = URL(string: Webservice.url + "auth/login") else {
+            return .failure(.invalidCredentials)
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        var loginString = body.email + ":" + body.password
+        guard let loginData = loginString.data(using: String.Encoding.utf8) else {
+            return .failure(.invalidCredentials)
+        }
+        let base64LoginString = loginData.base64EncodedString()
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+                
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+
+            if let loginResponse = try? JSONDecoder().decode(LoginResponse.self, from: data) {
+                return .success(loginResponse)
+            } else {
+                return .failure(.invalidCredentials)
+            }
+        } catch {
+            return .failure(.custom(message: "No data"))
+        }
+    }
 }
