@@ -15,7 +15,7 @@ struct HomeView: View {
     
     var body: some View {
         TabView {
-            VStack {}
+            RoomsView()
                 .tabItem {
                     Label("Rooms", systemImage: "list.bullet")
                 }
